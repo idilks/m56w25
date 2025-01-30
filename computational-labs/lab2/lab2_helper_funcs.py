@@ -1,11 +1,10 @@
 import numpy as np
 
 
-
 def large_gfac_matrix(n):
     """
     Creates an n x n matrix with 1 on the main diagonal, 
-    -1 on the subdiagonal entries, and 1 in the last column.
+    -1 on all subdiagonal entries, and 1 in the last column.
     
     Parameters:
         n (int): Size of the matrix (n x n).
@@ -19,9 +18,9 @@ def large_gfac_matrix(n):
     # Set 1 on the main diagonal
     np.fill_diagonal(matrix, 1)
     
-    # Set -1 on the subdiagonal
-    for i in range(1, n):
-        matrix[i, i - 1] = -1
+    # Set -1 on all subdiagonals
+    for k in range(1, n):
+        np.fill_diagonal(matrix[k:, :n-k], -1)
     
     # Set 1 in the last column
     matrix[:, -1] = 1
