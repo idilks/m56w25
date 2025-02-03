@@ -172,3 +172,46 @@ def lu_gecp(B):
 #     # Bonus for you to do!
 
 #     return P, Q, L, np.triu(A), growth_factor
+
+
+
+
+
+
+
+def cholfac(A):
+    """Given a SPD matrix A, computes L in the Cholesky factorization A = L L^T.
+    """
+
+    n = A.shape[0] 
+    L = np.zeros((n,n))
+
+    # Do the first step manually
+    Lsub = np.sqrt(A[0,0])
+    L[0,0] = Lsub
+
+    Asub = A[:2, :2]
+    d = Asub[0,-1] # d
+    gamma = Asub[-1,-1] # gamma
+
+    r = d/Lsub
+    rho = np.sqrt(gamma - np.dot(r,r))
+
+    Lsub = np.asarray([ [ Lsub, 0 ], [r, rho] ] )
+
+    # Now loop over the rest
+    for i in range(2,n):
+        
+        Asub = A[:i+1, :i+1]
+        d = Asub[:-1, -1]
+        gamma = Asub[-1, -1]
+
+        r = fsub(Lsub, d)
+        rho = np.sqrt(gamma - np.dot(r,r))
+
+        Lsub = np.vstack([ Lsub, r.T ])
+        tmp = np.zeros(Lsub.shape[0])
+        tmp[-1] = rho
+        Lsub = np.hstack([ Lsub, tmp[:,None] ])
+
+    return Lsub
